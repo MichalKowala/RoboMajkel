@@ -9,5 +9,9 @@ namespace RoboMajkel.Utilities
     public static class EnvVars
     {
         public static string RoboMajkelToken => Environment.GetEnvironmentVariable("RoboMajkelToken");
+        public static string RoboMajkelYTApiKey => Environment.GetEnvironmentVariable("RoboMajkelYTApiKey");
+        public static string RoboMajkelYTApiKeyBackup => Environment.GetEnvironmentVariable("RoboMajkelYTApiKeyBackup");
+        public static string RoboMajkelYTApiKeyBackup2 => Environment.GetEnvironmentVariable("RoboMajkelYTApiKeyBackup2");
+        public static string RoboMajkelYTApiKeyBackup3 => Environment.GetEnvironmentVariable("RoboMajkelYTApiKeyBackup3");
     }
 }
