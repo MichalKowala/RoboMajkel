@@ -10,10 +10,12 @@ namespace RoboMajkel
     {
         private readonly DiscordSocketClient _client;
         private readonly CommandService _commands;
-        public CommandHandler(DiscordSocketClient client, CommandService commands)
+        private readonly IServiceProvider _service;
+        public CommandHandler(DiscordSocketClient client, CommandService commands, IServiceProvider service)
         {
             _client = client;
             _commands = commands;
+            _service = service;
         }
 
         public void Dispose()
@@ -25,7 +27,7 @@ namespace RoboMajkel
         {
             _client.MessageReceived += HandleCommandAsync;
             await _commands.AddModulesAsync(assembly: Assembly.GetEntryAssembly(),
-                                        services: null);
+                                        services: _service);
         }
         private async Task HandleCommandAsync(SocketMessage messageParam)
         {
@@ -43,7 +45,7 @@ namespace RoboMajkel
             await _commands.ExecuteAsync(
                 context: context,
                 argPos: argPos,
-                services: null);
+                services: _service);
 
         }
     }

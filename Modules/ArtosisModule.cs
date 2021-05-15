@@ -1,5 +1,7 @@
 ﻿using Discord.Commands;
+using Microsoft.Extensions.Caching.Memory;
 using Newtonsoft.Json.Linq;
+using RoboMajkel.Interfaces;
 using RoboMajkel.Utilities;
 using System;
 using System.Collections.Generic;
@@ -13,14 +15,29 @@ namespace RoboMajkel.Modules
 {
     public class ArtosisModule : ModuleBase<SocketCommandContext>
     {
+        private readonly ICachingService _cachingService;
+        public ArtosisModule(ICachingService cachingService)
+        {
+            _cachingService = cachingService;
+        }
         [Command("artoclip")]
         [Summary("Plays random artosis clip")]
         public async Task ArtoClip()
         {
-            var clip = await GetArtoclipUrl();
-            await Context.Channel.SendMessageAsync(clip);
+            var clip = GetArtoClipUrl();
+            await Context.Channel.SendMessageAsync(await clip);
         }
-        private async Task<string> GetArtoclipUrl()
+
+        private async Task<string> GetArtoClipUrl()
+        {
+            if (_cachingService.IsCached(CacheKeys.ArtoClipVideoIds) == false)
+                _cachingService.SetCache<List<string>>(CacheKeys.ArtoClipVideoIds, await GetAllArtoClipIds());
+            List<string> clipIds = _cachingService.GetFromCache<List<string>>(CacheKeys.ArtoClipVideoIds);
+            Random rnd = new();
+            string clip = clipIds.ElementAt(rnd.Next(clipIds.Count()));
+            return $"https://www.youtube.com/watch?v={clip}";
+        }
+        private async Task<List<string>> GetAllArtoClipIds()
         {
             string ArtosisStarcraftClipsChannelId = "UC6p7RWdPkmGkr-Ll5IdRbYg";
             int resultsPerPage = 50; // 0-50
@@ -48,8 +65,7 @@ namespace RoboMajkel.Modules
                     results.Add(videoId);
                 }
             } while (nextPageToken != null);
-            var rand = new Random();
-            return "https://www.youtube.com/watch?v=" + results.ElementAt(rand.Next(results.Count()));
+            return results;
         }
     }
 }
