@@ -13,5 +13,6 @@ namespace RoboMajkel.Utilities
         public static string RoboMajkelYTApiKeyBackup => Environment.GetEnvironmentVariable("RoboMajkelYTApiKeyBackup");
         public static string RoboMajkelYTApiKeyBackup2 => Environment.GetEnvironmentVariable("RoboMajkelYTApiKeyBackup2");
         public static string RoboMajkelYTApiKeyBackup3 => Environment.GetEnvironmentVariable("RoboMajkelYTApiKeyBackup3");
+        public static string RoboMajkelTtsAudioFileLocation => Environment.GetEnvironmentVariable("RoboMajkelTtsAudioFileLocation");
     }
 }
